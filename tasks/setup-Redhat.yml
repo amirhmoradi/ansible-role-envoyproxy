@@ -1,0 +1,13 @@
+---
+- name: "(Install: RedHat) Add Getenvoy.io Repository"
+  yum_repository:
+    name: getenvoy
+    baseurl: "https://getenvoy.io/linux/rhel/tetrate-getenvoy.repo"
+    description: GetEnvoy Repository
+    enabled: yes
+    gpgcheck: yes
+
+- name: "(Install: RedHat) Install Envoy Proxy"
+  package:
+    name: getenvoy-envoy
+    state: present

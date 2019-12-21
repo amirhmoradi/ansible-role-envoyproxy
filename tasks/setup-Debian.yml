@@ -1,0 +1,36 @@
+---
+- name: Update apt cache.
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: Ensure required dependencies packages are installed.
+  apt:
+    name: "{{ dependency_packages }}"
+    state: "{{ dependency_packages_state }}"
+    install_recommends: "{{ dependency_install_recommends }}"
+  register: dependency_package_install
+
+- name: Add Getenvoy.io apt key (Debian).
+  apt_key:
+    url: https://getenvoy.io/gpg
+    state: present
+  when: ansible_distribution == "Debian"
+
+- name: Add Getenvoy.io repo (Debian).
+  apt_repository:
+    repo: "deb [arch=amd64] https://dl.bintray.com/tetrate/getenvoy-deb {{ ansible_distribution_release }} stable"
+    state: present
+  register: envoy_getenvoy_debian_repo
+  when: ansible_distribution == "Debian"
+
+- name: Update apt caches after repo is added (Debian).
+  apt: update_cache=true
+  when:
+    - envoy_getenvoy_debian_repo.changed
+    - ansible_distribution == "Debian"
+  tags: ['skip_ansible_lint']
+
+- name: Ensure Envoy package is installed
+  apt:
+    name: "getenvoy-envoy"
+    state: "present"
+  register: envoy_package_install

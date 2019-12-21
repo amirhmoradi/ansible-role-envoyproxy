@@ -1,0 +1,7 @@
+---
+__dependency_packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg2
+  - software-properties-common

@@ -1,0 +1,3 @@
+---
+__dependency_packages:
+  - yum-utils
